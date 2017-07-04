@@ -4,9 +4,6 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 sys.path.append('files/')
-from group import *
-from create_token import *
-import time
 
 #check for vkontakte lib
 from pip import main, get_installed_distributions
@@ -19,6 +16,11 @@ else:
 	main(["install", 'vkontakte'])
 
 import vkontakte
+from group import *
+from create_token import *
+import time
+
+
 
 #Check if you have token
 try:
