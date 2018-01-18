@@ -1,52 +1,47 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
-sys.path.append('files/')
 
-#check for vkontakte lib
+
+#check for vk_api lib
 from pip import main, get_installed_distributions
 installed_packages = get_installed_distributions()
 flat_installed_packages = [package.project_name for package in installed_packages]
-if 'vkontakte' in flat_installed_packages: 
+if 'vk_api' in flat_installed_packages: 
 	pass
 else: 
-	print "Vkontakte module is needed. Trying to install..."
-	main(["install", 'vkontakte'])
+	print("vk_api module is needed. Trying to install...")
+	main(["install", 'vk_api'])
 
-import vkontakte
-from group import *
-from create_token import *
-import time
+import vk_api
 
+def auth_handler():
+    key = input("Enter authentication code: ")
+    remember_device = True
 
+    return key, remember_device
 
-#Check if you have token
-try:
-	get_server_time()
-except vkontakte.api.VKError as error:
-	if error.code == 5:
-		create_token()
-		get_server_time()
-		quit()
-	else:
-		print error
-		quit()
+login = input("login: ") 
+password = input("password: ")
+vk_session = vk_api.VkApi(
+		login, password,
+		auth_handler=auth_handler  
+	)
 
-id1 = raw_input('Enter first group id: ') 
-id2 = raw_input('Enter second group id: ') 
+vk_session.auth()	
+	
+tools = vk_api.VkTools(vk_session)
+vk = vk_session.get_api()
 
-count1 = get_info(id1)
-count2 = get_info(id2)
+id1 = input('Enter first group id: ')
+id2 = input('Enter second group id: ')
 
-members1 = get_members_ids(id1, count1)
-members2 = get_members_ids(id2, count2)
+members1 = tools.get_all('groups.getMembers', 1000, {'group_id': id1})["items"]
+members2 = tools.get_all('groups.getMembers', 1000, {'group_id': id2})["items"]
 
 intersection = len(set(members1).intersection(members2))
 
-print "There are %s common users" % intersection
-print "It is %s percent for group with %s id" % ((intersection*100/count1), id1)
-print "It is %s percent for group with %s id" % ((intersection*100/count2), id2)
+print("There are %s common users" % intersection)
+print("It is %s percent for group with %s id" % (roundfloat((intersection*100/len(members1), 1)), id1))
+print("It is %s percent for group with %s id" % (roundfloat((intersection*100/len(members2), 1)), id2))
 
-raw_input("Press enter to quit")
+input("Press enter to quit")
