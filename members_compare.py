@@ -41,7 +41,7 @@ members2 = tools.get_all('groups.getMembers', 1000, {'group_id': id2})["items"]
 intersection = len(set(members1).intersection(members2))
 
 print("There are %s common users" % intersection)
-print("It is %s percent for group with %s id" % (roundfloat((intersection*100/len(members1), 1)), id1))
-print("It is %s percent for group with %s id" % (roundfloat((intersection*100/len(members2), 1)), id2))
+print("It is %s percent for group with %s id" % (round((intersection*100/len(members1), 1)), id1))
+print("It is %s percent for group with %s id" % (round((intersection*100/len(members2), 1)), id2))
 
 input("Press enter to quit")
