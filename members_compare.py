@@ -51,8 +51,13 @@ vk = vk_session.get_api()
 id1 = get_group_id(input('Enter first group id: '))
 id2 = get_group_id(input('Enter second group id: '))
 
-members1 = tools.get_all('groups.getMembers', 1000, {'group_id': id1, 'filter': 'unsure'})["items"]
-members2 = tools.get_all('groups.getMembers', 1000, {'group_id': id2, 'filter': 'unsure'})["items"]
+members1 = tools.get_all('groups.getMembers', 1000, {'group_id': id1})["items"]
+unsure_members1 = tools.get_all('groups.getMembers', 1000, {'group_id': id1, 'filter': 'unsure'})["items"]
+if members1 != unsure_members1: members1+=unsure_members1
+
+members2 = tools.get_all('groups.getMembers', 1000, {'group_id': id2})["items"]
+unsure_members2 = tools.get_all('groups.getMembers', 1000, {'group_id': id2, 'filter': 'unsure'})["items"]
+if members2 != unsure_members2: members2+=unsure_members2
 
 intersection = len(set(members1).intersection(members2))
 
